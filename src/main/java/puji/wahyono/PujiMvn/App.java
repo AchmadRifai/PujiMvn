@@ -19,7 +19,7 @@ public class App
         	s.setConnectors(new Connector[] {sc});
         	WebAppContext wac=new WebAppContext();
         	wac.setContextPath("/");
-        	wac.setWar("src/webapp");
+        	wac.setWar("src/main/webapp");
         	s.setHandler(wac);
         	s.start();
         }catch(Exception e) {

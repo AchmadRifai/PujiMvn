@@ -5,7 +5,7 @@
   <groupId>puji.wahyono</groupId>
   <artifactId>PujiMvn</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
 
   <name>PujiMvn</name>
   <url>http://maven.apache.org</url>
@@ -65,6 +65,14 @@
         </executions>
       </plugin>
       <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>2.4</version>
+          <configuration>
+              <webXml>src\main\webapp\WEB-INF\web.xml</webXml>
+          </configuration>
+      </plugin>
+      <!--<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.0.2</version>
@@ -77,7 +85,7 @@
             </manifest>
           </archive>
         </configuration>
-      </plugin>
+      </plugin>-->
       <plugin>
       	<groupId>org.codehaus.mojo</groupId>
       	<artifactId>exec-maven-plugin</artifactId>
@@ -195,4 +203,15 @@
             <version>1.1-rc-1</version>
         </dependency>
   </dependencies>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
