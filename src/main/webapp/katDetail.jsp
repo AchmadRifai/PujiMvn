@@ -175,7 +175,7 @@ desired effect
                     </li>
                     <%
                             }r.close();
-p.close();
+                            p.close();
                             d.close();
                         }catch(java.sql.SQLException ex){util.Db.hindar(ex, request.getRemoteAddr());}
                     %>

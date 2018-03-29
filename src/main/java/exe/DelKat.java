@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package php;
+package exe;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author ai
+ * @author ashura
  */
-public class EditImgKat extends HttpServlet {
+public class DelKat extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -27,25 +27,37 @@ public class EditImgKat extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    protected void processRequest(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
-        util.General.ajarAdmin(request, response);
-        if(null!=request.getParameter("kode"))try {
+        util.General.ajarAdmin(req, res);
+        if(null!=req.getParameter("kode"))try {
             util.Db d=new util.Db();
-            int i=Integer.parseInt(request.getParameter("kode"));
-            java.sql.PreparedStatement p=d.getPrep("select nama from kat_menu where kode=?");
-            p.setInt(1, i);
-            java.sql.ResultSet r=p.executeQuery();
-            if(r.next()){
-                request.getSession().setAttribute("kat", r.getString("nama"));
-                response.sendRedirect("editImgKat.jsp");
-            }else response.sendRedirect("dash.php");
-            r.close();
-            p.close();
+            java.sql.PreparedStatement p1=d.getPrep("select kode from menu where kat=?"),p2,p3;
+            p1.setInt(1, Integer.parseInt(req.getParameter("kode")));
+            java.sql.ResultSet r=p1.executeQuery();
+            while(r.next()){
+                java.sql.PreparedStatement pa=d.getPrep("delete from bahan where menu=?"),pb;
+                pb=d.getPrep("delete from item_pesanan where menu=?");
+                pa.setString(1, r.getString("kode"));
+                pb.setString(1, r.getString("kode"));
+                pa.execute();
+                pb.execute();
+                pb.close();
+                pa.close();
+            }r.close();
+            p1.close();
+            p2=d.getPrep("delete from menu where kat=?");
+            p3=d.getPrep("delete from kat_menu where kode=?");
+            p2.setInt(1, Integer.parseInt(req.getParameter("kode")));
+            p3.setInt(1, Integer.parseInt(req.getParameter("kode")));
+            p2.execute();
+            p3.execute();
+            p2.close();
+            p3.close();
             d.close();
         } catch (SQLException ex) {
-            util.Db.hindar(ex, request.getRemoteAddr());
-        }else response.sendRedirect("dash.php");
+            util.Db.hindar(ex, req.getRemoteAddr());
+        }res.sendRedirect("dash.php");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

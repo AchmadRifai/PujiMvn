@@ -151,7 +151,7 @@ desired effect
                       <%
 try{
     util.Db d=new util.Db();
-    java.sql.ResultSet r=d.getResult("select kode,nama,almt,jab,mlebu from karyawan");
+    java.sql.ResultSet r=d.getResult("select kode,nama,almt,jab,mlebu from karyawan limit 5");
     while(r.next()){
         %>
         <tr>
@@ -225,7 +225,7 @@ try{
                       <%
 try{
     util.Db d=new util.Db();
-    java.sql.ResultSet r=d.getResult("select*from persediaan");
+    java.sql.ResultSet r=d.getResult("select*from persediaan limit 5");
     while(r.next()){
         %>
         <tr>
@@ -300,7 +300,7 @@ try{
                       <%
 try{
     util.Db d=new util.Db();
-    java.sql.ResultSet r=d.getResult("select nomor,ket from meja");
+    java.sql.ResultSet r=d.getResult("select nomor,ket from meja limit 5");
     while(r.next()){
         %>
         <tr>
@@ -373,7 +373,7 @@ try{
                       <%
 try{
     util.Db d=new util.Db();
-    java.sql.ResultSet r=d.getResult("select nota,meja,tgl,total,terima from pesanan where submitted order by tgl desc");
+    java.sql.ResultSet r=d.getResult("select nota,meja,tgl,total,terima from pesanan where submitted order by tgl desc limit 5");
     while(r.next()){
         %>
         <tr>

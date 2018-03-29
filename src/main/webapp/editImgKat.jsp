@@ -116,7 +116,7 @@ desired effect
         <li>Admin</li>
         <li>Daftar</li>
         <li>Kategori</li>
-        <li class="active"><%out.print(request.getParameter("kode")); %></li>
+        <li class="active"><%out.print(request.getSession().getAttribute("kat")); %></li>
       </ol>
     </section>
 
@@ -140,8 +140,8 @@ desired effect
                           <%
                               try{
                                   util.Db d=new util.Db();
-                                  java.sql.PreparedStatement p=d.getPrep("select gbr from kat_menu where kode=?");
-                                  p.setInt(1, Integer.parseInt(""+request.getSession().getAttribute("kat")));
+                                  java.sql.PreparedStatement p=d.getPrep("select gbr from kat_menu where nama=?");
+                                  p.setString(1, ""+request.getSession().getAttribute("kat"));
                                   java.sql.ResultSet r=p.executeQuery();
                                   if(r.next()){
                           %>
@@ -168,8 +168,8 @@ desired effect
                 <%
                     try{
                         util.Db d=new util.Db();
-                        java.sql.PreparedStatement p=d.getPrep("select count(kode)as itung from menu where kat=?");
-                        p.setInt(1, Integer.parseInt(""+request.getSession().getAttribute("kat")));
+                        java.sql.PreparedStatement p=d.getPrep("select count(kode)as itung from menu where nama=?");
+                        p.setString(1, ""+request.getSession().getAttribute("kat"));
                         java.sql.ResultSet r=p.executeQuery();
                         if(r.next())out.print(""+r.getInt("itung")+" Menu");
                         r.close();
@@ -191,8 +191,9 @@ desired effect
                     <%
                         try{
                             util.Db d=new util.Db();
-                            java.sql.PreparedStatement p=d.getPrep("select kode,nama,gbr,harga from menu where kat=?");
-                            p.setInt(1, Integer.parseInt(""+request.getSession().getAttribute("kat")));
+                            java.sql.PreparedStatement p=d.getPrep("select kode,nama,gbr,harga from menu where kat=(select kode from kat_menu "
+                                    + "where nama=?)");
+                            p.setString(1, ""+request.getSession().getAttribute("kat"));
                             java.sql.ResultSet r=p.executeQuery();
                             while(r.next()){
                     %>
@@ -263,5 +264,5 @@ desired effect
      user experience. -->
 </body>
 </html>
-<%}else response.sendRedirect("dash.php");
+<% request.getSession().removeAttribute("kat"); }else response.sendRedirect("dash.php");
 %>
