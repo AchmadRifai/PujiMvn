@@ -1,4 +1,7 @@
 package puji.wahyono.PujiMvn;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.bio.SocketConnector;
@@ -14,9 +17,12 @@ public class App
     {
         Server s=null;try {
         	s=new Server();
-        	SocketConnector sc=new SocketConnector();
+        	SocketConnector sc=new SocketConnector(),sc2=new SocketConnector();
+                sc.setHost(thisIP());
         	sc.setPort(2101);
-        	s.setConnectors(new Connector[] {sc});
+                sc2.setPort(2101);
+                sc2.setHost("localhost");
+        	s.setConnectors(new Connector[] {sc,sc2});
         	WebAppContext wac=new WebAppContext();
         	wac.setContextPath("/");
         	wac.setWar("src/main/webapp");
@@ -31,5 +37,17 @@ public class App
 					e1.printStackTrace();
 				}
         }
+        System.out.println(thisIP());
+    }
+
+    private static String thisIP() {
+        String s="127.0.0.1";
+        try {
+            java.net.InetAddress ia=java.net.Inet4Address.getLocalHost();
+            s=ia.getHostAddress();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return s;
     }
 }
