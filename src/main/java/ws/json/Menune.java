@@ -13,6 +13,9 @@ import java.sql.SQLException;
  */
 @javax.ws.rs.Path("/menu")
 public class Menune {
+    @javax.ws.rs.core.Context
+    private javax.servlet.http.HttpServletRequest req;
+
     @javax.ws.rs.GET
     @javax.ws.rs.Path("/kat")
     @javax.ws.rs.Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
@@ -29,7 +32,7 @@ public class Menune {
             }r.close();
             d.close();
         } catch (SQLException ex) {
-            util.Db.hindar(ex, "android");
+            util.Db.hindar(ex, intukIP());
         }return a.toJSONString();
     }
 
@@ -52,7 +55,7 @@ public class Menune {
             }r.close();
             d.close();
         } catch (SQLException ex) {
-            util.Db.hindar(ex, "android");
+            util.Db.hindar(ex, intukIP());
         }return a.toJSONString();
     }
 
@@ -78,7 +81,7 @@ public class Menune {
             p.close();
             d.close();
         } catch (SQLException ex) {
-            util.Db.hindar(ex, "android");
+            util.Db.hindar(ex, intukIP());
         }return a.toJSONString();
     }
 
@@ -98,5 +101,9 @@ public class Menune {
         }r.close();
         p.close();
         return b;
+    }
+
+    private String intukIP() {
+        return req.getRemoteAddr();
     }
 }

@@ -19,6 +19,9 @@ import util.Db;
  */
 @javax.ws.rs.Path("/pesan")
 public class PesanMenu {
+    @javax.ws.rs.core.Context
+    private javax.servlet.http.HttpServletRequest req;
+
     @javax.ws.rs.GET
     @javax.ws.rs.Path("/{m}")
     @javax.ws.rs.Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
@@ -27,7 +30,7 @@ public class PesanMenu {
             util.Db d=new util.Db();
             java.sql.Timestamp t=java.sql.Timestamp.valueOf(LocalDateTime.now());
             String s=m+t.getDate()+t.getMonth()+t.getYear()+t.getHours()+t.getMinutes()+t.getSeconds();
-            java.sql.PreparedStatement p=d.getPrep("insert into pesanan values(?,?,?,?,?,?,?,?,?)");
+            java.sql.PreparedStatement p=d.getPrep("insert into pesanan values(?,?,?,?,?,?,?,?,?,?)");
             p.setString(1, s);
             p.setInt(2, Integer.parseInt(m));
             p.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
@@ -37,13 +40,14 @@ public class PesanMenu {
             p.setBoolean(7, false);
             p.setBoolean(8, false);
             p.setBoolean(9, false);
+            p.setBoolean(10, true);
             p.execute();
             p.close();
             d.close();
             o.put("nota", s);
         } catch (SQLException ex) {
             o.put("nota", "Error");
-            util.Db.hindar(ex, m);
+            util.Db.hindar(ex, intukIP());
         }return o.toJSONString();
     }
 
@@ -64,21 +68,21 @@ public class PesanMenu {
             }d.close();
         } catch (SQLException ex) {
             o.put("pesan", "Error");
-            util.Db.hindar(ex, nota);
+            util.Db.hindar(ex, intukIP());
         }return o.toJSONString();
     }
 
     private boolean notaAda(Db d, String nota, String menu) {
         boolean b=false;try {
-            java.sql.PreparedStatement p=d.getPrep("select qty from item_pesanan where nota=? and menu=?");
+            java.sql.PreparedStatement p=d.getPrep("select qty,lagi from item_pesanan where nota=? and menu=?");
             p.setString(1, nota);
             p.setString(2, menu);
             java.sql.ResultSet r=p.executeQuery();
-            b=r.next();
+            b=r.next()&&allowChange(d,nota);
             r.close();
             p.close();
         } catch (SQLException ex) {
-            Db.hindar(ex, nota);
+            Db.hindar(ex, intukIP());
         }return b;
     }
 
@@ -138,7 +142,7 @@ public class PesanMenu {
             p.close();
             d.close();
         } catch (SQLException ex) {
-            Db.hindar(ex, nota);
+            Db.hindar(ex, intukIP());
         }return a.toJSONString();
     }
 
@@ -191,7 +195,7 @@ public class PesanMenu {
             o.put("pesan", "Sukses");
         } catch (SQLException ex) {
             o.put("pesan", "Error");
-            Db.hindar(ex, nota);
+            Db.hindar(ex, intukIP());
         }return o.toJSONString();
     }
 
@@ -209,7 +213,7 @@ public class PesanMenu {
 			o.put("pesan", "Sukses");
 		}catch(SQLException ex){
 			o.put("pesan", "Error");
-            Db.hindar(ex, nota);
+            Db.hindar(ex, intukIP());
 		}return o.toJSONString();
 	}
 
@@ -228,7 +232,22 @@ public class PesanMenu {
             o.put("pesan", "Sukses");
         } catch (SQLException ex) {
             o.put("pesan", "Error");
-            Db.hindar(ex, nota);
+            Db.hindar(ex, intukIP());
         }return o.toJSONString();
         }
+
+    private String intukIP() {
+        return req.getRemoteAddr();
+    }
+
+    private boolean allowChange(Db d, String nota) throws SQLException {
+        boolean b=false;
+        java.sql.PreparedStatement p=d.getPrep("select lagi from pesanan where nota=?");
+        p.setString(1, nota);
+        java.sql.ResultSet r=p.executeQuery();
+        if(r.next())b=r.getBoolean("lagi");
+        r.close();
+        p.close();
+        return b;
+    }
 }
