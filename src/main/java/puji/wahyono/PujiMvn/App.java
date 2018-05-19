@@ -18,7 +18,9 @@ public class App
         Server s=null;try {
         	s=new Server();
         	SocketConnector sc=new SocketConnector(),sc2=new SocketConnector();
-                sc.setHost(thisIP());
+                String ip=thisIP();
+                System.out.println(ip);
+                sc.setHost(ip);
         	sc.setPort(2101);
                 sc2.setPort(2101);
                 sc2.setHost("localhost");
@@ -37,7 +39,6 @@ public class App
 					e1.printStackTrace();
 				}
         }
-        System.out.println(thisIP());
     }
 
     private static String thisIP() {
