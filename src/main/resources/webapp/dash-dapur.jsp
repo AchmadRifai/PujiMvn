@@ -130,7 +130,7 @@ desired effect
 <%
     try{
         util.Db d=new util.Db();
-        java.sql.ResultSet r=d.getResult("select nota,meja from pesanan where not terima and submitted and lagi");
+        java.sql.ResultSet r=d.getResult("select nota,meja from pesanan where not terima and submitted");
         while(r.next()){
             %>
 <div class="box box-info">

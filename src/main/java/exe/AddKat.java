@@ -6,10 +6,7 @@
 package exe;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +33,8 @@ public class AddKat extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         util.General.ajarAdmin(request, response);
-        javax.servlet.http.Part gbr=request.getPart("gbr");
+        if(!request.getParts().isEmpty()){
+            javax.servlet.http.Part gbr=request.getPart("gbr");
         String kode=request.getParameter("kode"),nama=request.getParameter("nama");
         if(null!=gbr&&kode!=null&&nama!=null)try {
             util.Db d=new util.Db();
@@ -50,6 +48,7 @@ public class AddKat extends HttpServlet {
         } catch (SQLException ex) {
             response.sendRedirect("addKat.jsp");
             util.Db.hindar(ex, request.getRemoteAddr());
+        }else response.sendRedirect("addKat.jsp");
         }else response.sendRedirect("addKat.jsp");
     }
 
