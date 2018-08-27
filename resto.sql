@@ -418,6 +418,7 @@ INSERT INTO `persediaan` (`kode`, `nama`, `stok`, `satuan`) VALUES
 CREATE TABLE `pesanan` (
   `nota` varchar(30) NOT NULL,
   `meja` int(11) NOT NULL,
+  nama varchar(40)not null, hp varchar(20)not null,
   `tgl` date NOT NULL,
   `byr` text NOT NULL,
   `susuk` text NOT NULL,

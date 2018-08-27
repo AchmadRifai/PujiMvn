@@ -89,17 +89,17 @@
       <plugin>
       	<groupId>org.codehaus.mojo</groupId>
       	<artifactId>exec-maven-plugin</artifactId>
-      	<version>1.5.0</version>
-      	<executions>
-      	  <execution>
-      	    <goals>
-      	      <goal>java</goal>
-      	    </goals>
-      	    <id>java</id>
-      	  </execution>
-      	</executions>
+      	<version>1.2</version>
       	<configuration>
-      	  <mainClass>puji.wahyono.PujiMvn.App</mainClass>
+            <executable>java</executable>
+            <arguments>
+                <argument>-Dtomcat.util.scan.StandardJarScanFilter.jarsToScan=taglibs-standard-impl-*</argument>
+                <argument>-Dtomcat.util.scan.StandardJarScanFilter.jarsToSkip=apache-*,ecj-*,jetty-*,asm-*,javax.servlet-*,javax.annotation-*,taglibs-standard-spec-*</argument>
+                <argument>-cp</argument>
+                <classpath />
+                <argument>org.eclipse.jetty.demo.Main</argument>
+                <argument>2101</argument>
+            </arguments>
       	</configuration>
       </plugin>
     </plugins>
